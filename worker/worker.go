@@ -6,7 +6,7 @@ import (
 	"github.com/golang-collections/collections/queue"
 	"github.com/google/uuid"
 
-	"ordo/task"
+	"github.com/sajalkmr/ordo/task"
 )
 
 type Worker struct {

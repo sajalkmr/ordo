@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"ordo/manager"
-	"ordo/node"
-	"ordo/task"
-	"ordo/worker"
 	"time"
+
+	"github.com/sajalkmr/ordo/manager"
+	"github.com/sajalkmr/ordo/node"
+	"github.com/sajalkmr/ordo/task"
+	"github.com/sajalkmr/ordo/worker"
 
 	"github.com/golang-collections/collections/queue"
 	"github.com/google/uuid"

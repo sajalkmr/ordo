@@ -1,12 +1,18 @@
 package manager
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/golang-collections/collections/queue"
+	"github.com/google/uuid"
+	"github.com/sajalkmr/ordo/task"
+)
 
 type Manager struct {
 	Pending       queue.Queue
-	TaskDb        map[string][]Task
-	Event         map[string][]TaskEvent
-	EventDb       map[String][]TaskEvent
+	TaskDb        map[string][]task.Task
+	Event         map[string][]task.TaskEvent
+	EventDb       map[string][]task.TaskEvent // Fixed String -> string
 	Workers       []string
 	WorkerTaskMap map[string][]uuid.UUID
 	TaskWorkerMap map[uuid.UUID]string
