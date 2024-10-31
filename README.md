@@ -1,10 +1,17 @@
 ## ordo
 - ordo is a simplified container orchestrator written in Go. It provides a practical understanding of orchestrator concepts like task management, scheduling, and worker communication.
 
+## Requirements
+
+- **Go** (v1.16 or later)
+- **Docker**
+- **BoltDB** (v1.3.1)
+- **chi** (v5.0.3)
+- **goprocinfo**
 
 
 
-### Features
+## Features
 
 #### Task Management
 
