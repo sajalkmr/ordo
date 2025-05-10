@@ -1,39 +1,54 @@
-## ordo
-- ordo is a simplified container orchestrator written in Go. It provides a practical understanding of orchestrator concepts like task management, scheduling, and worker communication.
+# Ordo
 
-## Requirements
-
-- **Go** (v1.16 or later)
-- **Docker**
-- **BoltDB** (v1.3.1)
-- **chi** (v5.0.3)
-- **goprocinfo**
-
-
+Ordo is a container orchestrator written in Go that provides a practical implementation of container orchestration concepts. It allows you to manage and schedule Docker containers across multiple nodes.
 
 ## Features
 
-#### Task Management
+- **Task Management**: Create, stop, and monitor container tasks
+- **Node Management**: Add and manage worker nodes
+- **Task Scheduling**: Basic task scheduling across available nodes
+- **Status Monitoring**: View task and node status
+- **Docker Integration**: Direct integration with Docker for container management
 
-- [x] **Task States**: Implement task states (Pending, Running, Completed, Failed).
-- [x] **Docker Integration**: Start/stop Docker containers via Docker API.
-- [x] **Task Persistence**: Store tasks in-memory or in BoltDB.
+## Requirements
 
-#### Worker Features
-- [x] **Task Queue**: FIFO queue for processing tasks.
-- [x] **Task Execution**: Run assigned tasks as Docker containers.
-- [ ] **Metrics Collection**: Collect CPU, memory, disk usage data. **(Pending)**
+- Go 1.16 or later
+- Docker
+- BoltDB (v1.3.1)
+- chi (v5.0.3)
 
-#### Manager Features
-- [x] **Task Scheduling**: Basic task scheduling (Round-Robin).
-- [ ] **Enhanced Scheduler**: Resource-based E-PVM scheduler. **(Pending)**
-- [ ] **Health Checks**: Check task health, auto-restart on failure. **(Pending)**
+## Project Structure
 
-#### General Features
-- [x] **Modular Design**: Separate modules for tasks, workers, managers.
-- [ ] **Testability**: Set up automated testing. **(Pending)**
+- `cmd/`: Command-line interface implementation
+- `manager/`: Manager node implementation
+- `worker/`: Worker node implementation
+- `task/`: Task management and scheduling
+- `store/`: Data persistence layer
+- `utils/`: Utility functions
+- `node/`: Node management
+- `scheduler/`: Task scheduling logic
+- `stats/`: System statistics collection
 
-#### Limitations & Future Enhancements
-- [ ] **Security**: Add security measures. **(Pending)**
-- [ ] **Service Discovery**: Enable service discovery for tasks. **(Pending)**
-- [ ] **High Availability**: Implement redundancy for manager/workers. **(Pending)**
+## Getting Started
+
+1. Clone the repository
+2. Install dependencies: `go mod download`
+3. Build the project: `go build`
+4. Run the manager: `./ordo manager`
+5. Add worker nodes: `./ordo node add <node-address>`
+6. Create tasks: `./ordo run <task-config>`
+
+## Example Task Configuration
+
+```json
+{
+    "name": "example-task",
+    "image": "nginx:latest",
+    "ports": ["80:80"],
+    "env": ["ENV=production"]
+}
+```
+
+## License
+
+MIT License
