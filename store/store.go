@@ -1,14 +1,17 @@
 package store
 
 import (
-	"cube/task"
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 
+	"github.com/sajalkmr/ordo/task"
+
 	"github.com/boltdb/bolt"
 )
+
+// To fix: go get github.com/boltdb/bolt
 
 type Store interface {
 	Put(key string, value interface{}) error

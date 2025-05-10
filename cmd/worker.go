@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"cube/worker"
 	"fmt"
 	"log"
+
+	"github.com/sajalkmr/ordo/worker"
 
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"

@@ -1,14 +1,15 @@
 package node
 
 import (
-	"cube/stats"
-	"cube/utils"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/sajalkmr/ordo/stats"
+	"github.com/sajalkmr/ordo/utils"
 )
 
 type Node struct {

@@ -2,11 +2,6 @@ package manager
 
 import (
 	"bytes"
-	"cube/node"
-	"cube/scheduler"
-	"cube/store"
-	"cube/task"
-	"cube/worker"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -14,6 +9,12 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/sajalkmr/ordo/node"
+	"github.com/sajalkmr/ordo/scheduler"
+	"github.com/sajalkmr/ordo/store"
+	"github.com/sajalkmr/ordo/task"
+	"github.com/sajalkmr/ordo/worker"
 
 	"github.com/docker/go-connections/nat"
 	"github.com/golang-collections/collections/queue"

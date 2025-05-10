@@ -1,12 +1,13 @@
 package worker
 
 import (
-	"cube/stats"
-	"cube/task"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/sajalkmr/ordo/stats"
+	"github.com/sajalkmr/ordo/task"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"

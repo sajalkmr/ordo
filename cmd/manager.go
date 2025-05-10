@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"cube/manager"
 	"log"
+
+	"github.com/sajalkmr/ordo/manager"
 
 	"github.com/spf13/cobra"
 )

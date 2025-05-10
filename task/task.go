@@ -1,13 +1,12 @@
 package task
 
 import (
+	"context"
 	"io"
 	"log"
 	"math"
 	"os"
 	"time"
-
-	"context"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
@@ -28,7 +27,10 @@ type Task struct {
 	Disk          int64
 	ExposedPorts  nat.PortSet
 	PortBindings  map[string]string
+	HostPorts     nat.PortMap
 	RestartPolicy string
+	RestartCount  int
+	HealthCheck   string
 	StartTime     time.Time
 	FinishTime    time.Time
 }
@@ -38,6 +40,20 @@ type TaskEvent struct {
 	State     State
 	Timestamp time.Time
 	Task      Task
+}
+
+type DockerInspectResponse struct {
+	Error     error
+	Container *struct {
+		State struct {
+			Status string
+		}
+		NetworkSettings struct {
+			NetworkSettingsBase struct {
+				Ports map[string]string
+			}
+		}
+	}
 }
 
 // Config struct to hold Docker container config
@@ -86,7 +102,11 @@ type Docker struct {
 }
 
 func NewDocker(c *Config) *Docker {
-	dc, _ := client.NewClientWithOpts(client.FromEnv)
+	dc, _ := client.NewClientWithOpts(
+		client.FromEnv,
+		client.WithVersion("1.41"),
+		client.WithAPIVersionNegotiation(),
+	)
 	return &Docker{
 		Client: dc,
 		Config: *c,
@@ -154,7 +174,7 @@ func (d *Docker) Run() DockerResult {
 func (d *Docker) Stop(id string) DockerResult {
 	log.Printf("Attempting to stop container %v", id)
 	ctx := context.Background()
-	err := d.Client.ContainerStop(ctx, id, nil)
+	err := d.Client.ContainerStop(ctx, id, container.StopOptions{})
 	if err != nil {
 		log.Printf("Error stopping container %s: %v\n", id, err)
 		return DockerResult{Error: err}
@@ -171,4 +191,77 @@ func (d *Docker) Stop(id string) DockerResult {
 	}
 
 	return DockerResult{Action: "stop", Result: "success", Error: nil}
+}
+
+func (d *Docker) Remove(id string) DockerResult {
+	log.Printf("Attempting to remove container %v", id)
+	ctx := context.Background()
+	err := d.Client.ContainerRemove(ctx, id, types.ContainerRemoveOptions{
+		RemoveVolumes: true,
+		RemoveLinks:   false,
+		Force:         false,
+	})
+	if err != nil {
+		log.Printf("Error removing container %s: %v\n", id, err)
+		return DockerResult{Error: err}
+	}
+	return DockerResult{Action: "remove", Result: "success", Error: nil}
+}
+
+func dockerStateToTaskState(dockerState string) State {
+	switch dockerState {
+	case "created":
+		return Pending
+	case "running":
+		return Running
+	case "exited":
+		return Completed
+	case "dead":
+		return Failed
+	default:
+		return Pending
+	}
+}
+
+func (d *Docker) Inspect(id string) DockerInspectResponse {
+	ctx := context.Background()
+	containerInfo, err := d.Client.ContainerInspect(ctx, id)
+	if err != nil {
+		return DockerInspectResponse{
+			Error: err,
+		}
+	}
+
+	response := DockerInspectResponse{
+		Container: &struct {
+			State struct {
+				Status string
+			}
+			NetworkSettings struct {
+				NetworkSettingsBase struct {
+					Ports map[string]string
+				}
+			}
+		}{},
+	}
+
+	response.Container.State.Status = containerInfo.State.Status
+	response.Container.NetworkSettings.NetworkSettingsBase.Ports = make(map[string]string)
+
+	// Convert port bindings to the format expected by nat.PortMap
+	portMap := make(nat.PortMap)
+	for port, bindings := range containerInfo.NetworkSettings.Ports {
+		if len(bindings) > 0 {
+			portMap[nat.Port(port)] = []nat.PortBinding{
+				{
+					HostIP:   bindings[0].HostIP,
+					HostPort: bindings[0].HostPort,
+				},
+			}
+			// Also store in the response's port map for backward compatibility
+			response.Container.NetworkSettings.NetworkSettingsBase.Ports[string(port)] = bindings[0].HostPort
+		}
+	}
+
+	return response
 }

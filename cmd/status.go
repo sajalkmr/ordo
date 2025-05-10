@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"cube/task"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,6 +9,8 @@ import (
 	"os"
 	"text/tabwriter"
 	"time"
+
+	"github.com/sajalkmr/ordo/task"
 
 	"github.com/docker/go-units"
 	"github.com/spf13/cobra"

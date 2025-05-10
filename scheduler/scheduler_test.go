@@ -1,10 +1,11 @@
 package scheduler
 
 import (
-	"cube/node"
-	"cube/task"
-	"cube/utils"
 	"testing"
+
+	"github.com/sajalkmr/ordo/node"
+	"github.com/sajalkmr/ordo/task"
+	"github.com/sajalkmr/ordo/utils"
 
 	"github.com/google/go-cmp/cmp"
 )

@@ -1,6 +1,6 @@
 package main
 
-import "cube/cmd"
+import "github.com/sajalkmr/ordo/cmd"
 
 func main() {
 	cmd.Execute()

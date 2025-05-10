@@ -1,13 +1,14 @@
 package cmd
 
 import (
-	"cube/node"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"text/tabwriter"
+
+	"github.com/sajalkmr/ordo/node"
 
 	"github.com/spf13/cobra"
 )

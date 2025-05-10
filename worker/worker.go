@@ -6,11 +6,12 @@ import (
 	"log"
 	"time"
 
+	"github.com/docker/go-connections/nat"
 	"github.com/golang-collections/collections/queue"
 
-	"cube/stats"
-	"cube/store"
-	"cube/task"
+	"github.com/sajalkmr/ordo/stats"
+	"github.com/sajalkmr/ordo/store"
+	"github.com/sajalkmr/ordo/task"
 )
 
 type Worker struct {
@@ -221,7 +222,14 @@ func (w *Worker) updateTasks() {
 			}
 
 			// task is running, update exposed ports
-			t.HostPorts = resp.Container.NetworkSettings.NetworkSettingsBase.Ports
+			t.HostPorts = make(nat.PortMap)
+			for port, hostPort := range resp.Container.NetworkSettings.NetworkSettingsBase.Ports {
+				t.HostPorts[nat.Port(port)] = []nat.PortBinding{
+					{
+						HostPort: hostPort,
+					},
+				}
+			}
 			w.Db.Put(t.ID.String(), t)
 		}
 	}

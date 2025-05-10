@@ -1,11 +1,12 @@
 package scheduler
 
 import (
-	"cube/node"
-	"cube/task"
 	"log"
 	"math"
 	"time"
+
+	"github.com/sajalkmr/ordo/node"
+	"github.com/sajalkmr/ordo/task"
 )
 
 const (
